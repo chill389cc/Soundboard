@@ -10,3 +10,6 @@
 [submodule "CAD/Soundboard/libs/kiswitch"]
 	path = CAD/libs/kiswitch
 	url = https://github.com/kiswitch/kiswitch.git
+[submodule "CAD/libs/OPL_Kicad_Library"]
+	path = CAD/libs/OPL_Kicad_Library
+	url = https://github.com/Seeed-Studio/OPL_Kicad_Library.git
