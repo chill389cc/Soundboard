@@ -1,0 +1,15 @@
+[submodule "CAD/Soundboard/libs/KiCad-SSD1306-128x64"]
+	path = CAD/libs/KiCad-SSD1306-128x64
+	url = https://github.com/pforrmi/KiCad-SSD1306-128x64.git
+[submodule "CAD/Soundboard/libs/KiCad-SSD1306_OLED-0.91-128x32"]
+	path = CAD/libs/KiCad-SSD1306_OLED-0.91-128x32
+	url = https://github.com/MichMich/KiCad-SSD1306_OLED-0.91-128x32.git
+[submodule "CAD/Soundboard/libs/josh-kicad-lib"]
+	path = CAD/libs/josh-kicad-lib
+	url = https://github.com/joshajohnson/josh-kicad-lib.git
+[submodule "CAD/Soundboard/libs/kiswitch"]
+	path = CAD/libs/kiswitch
+	url = https://github.com/kiswitch/kiswitch.git
+[submodule "CAD/libs/OPL_Kicad_Library"]
+	path = CAD/libs/OPL_Kicad_Library
+	url = https://github.com/Seeed-Studio/OPL_Kicad_Library.git
