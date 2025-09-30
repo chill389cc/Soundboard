@@ -4625,6 +4625,12 @@
 		(uuid "81de992b-553a-448f-82de-f8b3630f2d86")
 	)
 	(junction
+		(at 189.23 280.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "83e446f8-9439-4b0f-ae8b-bb49cdfa375e")
+	)
+	(junction
 		(at 19.05 39.37)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6175,6 +6181,16 @@
 			(type default)
 		)
 		(uuid "6934e8d1-54d1-425d-9f0f-98ea6ea29ffe")
+	)
+	(wire
+		(pts
+			(xy 189.23 280.67) (xy 194.31 280.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6b1a53eb-96a2-44c9-997c-07a64e38079e")
 	)
 	(wire
 		(pts
@@ -8955,6 +8971,16 @@
 			(justify left bottom)
 		)
 		(uuid "f713c6c1-501d-487a-b49d-20843909e26d")
+	)
+	(label "3V3"
+		(at 194.31 280.67 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f8ccf769-691b-4dc9-b0d9-05c24246e66a")
 	)
 	(label "LED LAT"
 		(at 134.62 255.27 0)
