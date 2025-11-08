@@ -4625,6 +4625,12 @@
 		(uuid "81de992b-553a-448f-82de-f8b3630f2d86")
 	)
 	(junction
+		(at 189.23 280.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "83e446f8-9439-4b0f-ae8b-bb49cdfa375e")
+	)
+	(junction
 		(at 19.05 39.37)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6175,6 +6181,16 @@
 			(type default)
 		)
 		(uuid "6934e8d1-54d1-425d-9f0f-98ea6ea29ffe")
+	)
+	(wire
+		(pts
+			(xy 189.23 280.67) (xy 194.31 280.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6b1a53eb-96a2-44c9-997c-07a64e38079e")
 	)
 	(wire
 		(pts
@@ -8436,6 +8452,16 @@
 		)
 		(uuid "3dd6c036-1ef4-4ddf-9551-4383eee41376")
 	)
+	(label "LED SIN"
+		(at 116.84 57.15 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3e39a609-c093-4768-9511-688f61dcc024")
+	)
 	(label "GPIO28"
 		(at 116.84 80.01 0)
 		(effects
@@ -8737,16 +8763,6 @@
 		(uuid "a3c39657-c03c-4b8c-9d34-1c9845ec4f83")
 	)
 	(label "LED SCLK"
-		(at 116.84 57.15 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "a5d0b92e-5283-43d0-a642-c5f6bfa01878")
-	)
-	(label "LED SCLK"
 		(at 134.62 257.81 0)
 		(effects
 			(font
@@ -8846,6 +8862,16 @@
 		)
 		(uuid "cf489625-7866-4379-a626-16f8a7da1105")
 	)
+	(label "LED SCLK"
+		(at 116.84 54.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d45d45bc-1ca0-46a2-81b1-2c6663a12081")
+	)
 	(label "CC2"
 		(at 54.61 130.81 0)
 		(effects
@@ -8865,16 +8891,6 @@
 			(justify left bottom)
 		)
 		(uuid "d84decb5-5c91-49f4-a9d8-4b18e43a56c0")
-	)
-	(label "LED SIN"
-		(at 116.84 54.61 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "d95c9a6b-eef7-4b34-b7a5-3d5847e59ec5")
 	)
 	(label "GPIO11"
 		(at 62.23 74.93 0)
@@ -8955,6 +8971,16 @@
 			(justify left bottom)
 		)
 		(uuid "f713c6c1-501d-487a-b49d-20843909e26d")
+	)
+	(label "3V3"
+		(at 194.31 280.67 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f8ccf769-691b-4dc9-b0d9-05c24246e66a")
 	)
 	(label "LED LAT"
 		(at 134.62 255.27 0)
