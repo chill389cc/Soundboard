@@ -1,7 +1,7 @@
 # from typing import Callable, Optional
 import time
 import random
-from machine import Pin
+from machine import SPI, Pin
 import asyncio
 
 
@@ -102,9 +102,8 @@ class AsyncKeys:
 # LED_BLANK.value(0)
 # LED_SIN = Pin("GPIO18",Pin.OUT)
 # LED_SCLK = Pin("GPIO19",Pin.OUT)
-Pin("GPIO26",Pin.IN)
-Pin("GPIO16",Pin.IN)
-leds = LedMatrix(Pin("GPIO16",Pin.OUT) , Pin("GPIO17",Pin.OUT),Pin("GPIO19",Pin.OUT),Pin("GPIO18",Pin.OUT))
+
+leds = LedMatrix(Pin("GPIO16",Pin.OUT) , Pin("GPIO17",Pin.OUT),Pin("GPIO18",Pin.OUT),Pin("GPIO19",Pin.OUT))
 
 def key_handler(index:int,pin:Pin):
   button_on = not pin.value()

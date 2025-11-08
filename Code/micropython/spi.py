@@ -1,7 +1,6 @@
-# from typing import Callable, Optional
 import time
 import random
-from machine import Pin
+from machine import SPI, Pin
 import asyncio
 
 
@@ -27,34 +26,49 @@ class LedMatrix:
                    [0,0,1,0],
                    [0,0,0,1]]
   # frame scale sets the color scale. ex. a scale of 10 would allow each color to range from 0-10
-  _frame_scale = 10
-
+  _frame_scale = 3
   _PIN_LATCH:Pin
   _PIN_BLANK:Pin
   _PIN_DATA:Pin
   _PIN_CLOCK:Pin
+  _SPI:SPI
 
   def __init__(self, latch_pin:Pin, blank_pin:Pin, data_pin:Pin, clock_pin:Pin):
+    #  print("Initializing LedMatrix with SPI...")
      self._PIN_LATCH = latch_pin
      self._PIN_BLANK = blank_pin
      self._PIN_DATA = data_pin
      self._PIN_CLOCK = clock_pin
+     self._SPI = SPI(0, baudrate=80000, polarity=0, phase=0,bits=8, miso=Pin("GPIO4"), mosi=data_pin, sck=clock_pin)
+    #  print(f"SPI initialized with baudrate 40kHz")
      latch_pin.value(0)
+    #  print("LedMatrix initialization complete")
 
   def _write_shift_register(self, line:list[int], line_marker:list[int],cutoff:int):
+    data = [0,0]
+    i = 0
     for val in line:
-      self._PIN_CLOCK.value(0)
-      self._PIN_DATA.value(bool(val >= cutoff))
-      self._PIN_CLOCK.value(1)
+        index = i // 8
+        val = 1 if val >= cutoff else 0
+        data[index] = data[index] | (val << (7 - (i % 8)))
+        # print(f"line_marker val:{val} at index:{index} shifted to:{7 - (i % 8)}")
+        i += 1
     for val in line_marker:
-      self._PIN_CLOCK.value(0)
-      self._PIN_DATA.value(val)
-      self._PIN_CLOCK.value(1)
-    
+        index = i // 8
+        data[index] = data[index] | (val << (7 - (i % 8)))
+        # print(f"line_marker val:{val} at index:{index} shifted to:{7 - (i % 8)}")
+        i += 1
+    # print(f"built data: {[hex(b) for b in data]} length: {i}")
+    # Debug: Print SPI data being written
+    # if cutoff == 1:  # Only print for first cutoff to reduce spam
+        # print(f"SPI write: {[hex(b) for b in data]} (line_marker: {line_marker})")
+    # print(f"SPI write: {[hex(b) for b in data]} (line_marker: {line_marker})")
+    self._SPI.write(bytes(data))
     self._PIN_LATCH.value(1)
     self._PIN_LATCH.value(0)
 
   def set_pixel(self,x,y,r,g,b):
+    # print(f"Setting pixel ({x},{y}) to RGB({r},{g},{b})")
     self._lines[x][3*y + 0] = r
     self._lines[x][3*y + 1] = g
     self._lines[x][3*y + 2] = b
@@ -64,6 +78,8 @@ class LedMatrix:
     self.set_pixel(x,y,r,b,g)
 
   async def display_loop(self):
+    # print("Starting LED display loop...")
+    loop_count = 0
     while True:
       for cutoff in range(self._frame_scale):
         for i in range(4):
@@ -72,6 +88,9 @@ class LedMatrix:
             # Let another thread take a moment
 
       await asyncio.sleep(0)
+      loop_count += 1
+      if loop_count % 1000 == 0:  # Print every 1000 loops to show it's running
+          print(f"Display loop running... (iteration {loop_count})")
       # print("display")
 
 class AsyncKeys:
@@ -86,6 +105,7 @@ class AsyncKeys:
     return handler
 
   def __init__(self, pin_numbers: list[int],optional_handler=None) -> None:
+      print(f"Initializing AsyncKeys with pins: {pin_numbers}")
       self._buttons = []
       self._button_map = {}
       self._button_state = []
@@ -96,12 +116,8 @@ class AsyncKeys:
         index = len(self._buttons)
         pin.irq(self._make_handler(index,optional_handler))
         self._buttons.append(pin)
+      print(f"AsyncKeys initialization complete - {len(self._buttons)} buttons configured")
 
-# LED_LAT = Pin("GPIO16",Pin.OUT)
-# LED_BLANK = Pin("GPIO17",Pin.OUT)
-# LED_BLANK.value(0)
-# LED_SIN = Pin("GPIO18",Pin.OUT)
-# LED_SCLK = Pin("GPIO19",Pin.OUT)
 Pin("GPIO26",Pin.IN)
 Pin("GPIO16",Pin.IN)
 leds = LedMatrix(Pin("GPIO16",Pin.OUT) , Pin("GPIO17",Pin.OUT),Pin("GPIO19",Pin.OUT),Pin("GPIO18",Pin.OUT))
@@ -116,38 +132,6 @@ def key_handler(index:int,pin:Pin):
 
 
 keys = AsyncKeys([12,8,4,0,13,9,5,1,14,10,6,2,15,11,7,3], key_handler)
-
-# SW = [
-#   Pin("GPIO12",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO8",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO4",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO0",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO13",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO9",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO5",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO1",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO14",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO10",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO6",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO2",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO15",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO11",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO7",Pin.IN,Pin.PULL_UP),
-#   Pin("GPIO3",Pin.IN,Pin.PULL_UP)
-# ] 
-
-
-
-# for i in range(16):
-#   SW[i].irq(make_handler(i))
-
-# def _set_leds(array_vals,scale = 1):
-#   for val in array_vals:
-#     LED_SCLK.value(0)
-#     LED_SIN.value(val >= scale)
-#     LED_SCLK.value(1)
-#   LED_LAT.value(1)
-#   LED_LAT.value(0)
 
 async def main():
     asyncio.create_task(leds.display_loop())
@@ -189,40 +173,4 @@ async def main():
     #   else:
           await asyncio.sleep_ms(50)
 
-
-# def test_red_leds():
-#   _set_leds([1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0])
-#   time.sleep_ms(500)
-#   _set_leds([1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0])
-#   time.sleep_ms(500)
-#   _set_leds([1,0,0,1,0,0,1,0,0,1,0,0,0,0,1,0])
-#   time.sleep_ms(500)
-#   _set_leds([1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1])
-#   time.sleep_ms(500)
-
-# def test_green_leds():
-#   _set_leds([0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,0])
-#   time.sleep_ms(500)
-#   _set_leds([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0])
-#   time.sleep_ms(500)
-#   _set_leds([0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0])
-#   time.sleep_ms(500)
-#   _set_leds([0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,1])
-#   time.sleep_ms(500)
-
-# def test_blue_leds():
-#   _set_leds([0,0,1,0,0,1,0,0,1,0,0,1,1,0,0,0])
-#   time.sleep_ms(500)
-#   _set_leds([0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0])
-#   time.sleep_ms(500)
-#   _set_leds([0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0])
-#   time.sleep_ms(500)
-#   _set_leds([0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1])
-#   time.sleep_ms(500)
-
 asyncio.run(main())
-
-# while True:
-#   test_red_leds()
-#   test_green_leds()
-#   test_blue_leds()
